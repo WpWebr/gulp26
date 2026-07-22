@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+public/
+
+# Projects (each project manages its own build output)
+projects/*/dist/
+projects/*/public/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE - VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+# IDE - JetBrains
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+src/scss/_tmp/
+src/js/_tmp/
+
+# Environment
+.env
+.env.*
+
+# User config overrides (optional — uncomment if not committing)
+# gulp.config.local.js

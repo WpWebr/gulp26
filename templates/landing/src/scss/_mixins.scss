@@ -1,0 +1,13 @@
+@use 'variables' as *;
+
+@mixin respond-to($bp) {
+  @if $bp == md { @media (min-width: $breakpoint-md) { @content; } }
+  @else if $bp == lg { @media (min-width: $breakpoint-lg) { @content; } }
+  @else if $bp == xl { @media (min-width: $breakpoint-xl) { @content; } }
+}
+
+@mixin container {
+  max-width: $container-max;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+}

@@ -1,0 +1,9 @@
+.header {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 1rem 0;
+  &__container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  &__logo { font-size: 1.5rem; font-weight: 700; color: #fff; text-decoration: none; }
+  &__nav { display: flex; gap: 2rem; }
+  &__link { color: #e0e0e0; text-decoration: none; transition: color 0.3s; &:hover { color: #16c79a; } }
+}

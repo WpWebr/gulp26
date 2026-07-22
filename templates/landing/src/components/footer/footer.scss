@@ -1,0 +1,5 @@
+.footer {
+  background: #1a1a2e; color: #888; padding: 2rem 0; text-align: center;
+  &__container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+  p { font-size: 0.875rem; }
+}
