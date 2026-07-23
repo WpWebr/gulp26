@@ -1,0 +1,46 @@
+@use 'variables' as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: $radius-md;
+  text-decoration: none;
+  transition: background $transition-fast, color $transition-fast, box-shadow $transition-fast;
+  cursor: pointer;
+  border: 2px solid transparent;
+
+  &--primary {
+    background: $color-primary;
+    color: $color-white;
+
+    &:hover {
+      background: darken($color-primary, 8%);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: $color-white;
+    border-color: rgba($color-white, 0.4);
+
+    &:hover {
+      background: rgba($color-white, 0.1);
+      border-color: $color-white;
+    }
+  }
+
+  &--large {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+
+  &--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+}

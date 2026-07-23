@@ -1,0 +1,73 @@
+@use 'variables' as *;
+@use '../../scss/mixins' as *;
+
+.layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+
+  &--sidebar-left {
+    flex-direction: row;
+  }
+
+  &--sidebar-right {
+    flex-direction: row-reverse;
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__sidebar {
+    flex-shrink: 0;
+    width: $sidebar-width;
+
+    @include respond-to(md) {
+      display: none;
+    }
+  }
+
+  &__overlay {
+    display: none;
+  }
+
+  // Mobile: sidebar as off-canvas
+  @include respond-to(md) {
+    &--sidebar-left &__sidebar,
+    &--sidebar-right &__sidebar {
+      position: fixed;
+      top: $header-height;
+      bottom: 0;
+      z-index: $z-sidebar;
+      background: $color-white;
+      box-shadow: $shadow-lg;
+      transform: translateX(-100%);
+      transition: transform $transition-normal;
+      width: $sidebar-width;
+      display: block;
+    }
+
+    &--sidebar-right &__sidebar {
+      right: 0;
+      left: auto;
+      transform: translateX(100%);
+    }
+
+    &--sidebar-left &__sidebar.is-open,
+    &--sidebar-right &__sidebar.is-open {
+      transform: translateX(0);
+    }
+
+    &__overlay.is-visible {
+      display: block;
+      position: fixed;
+      inset: 0;
+      top: $header-height;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: $z-sidebar - 1;
+    }
+  }
+}

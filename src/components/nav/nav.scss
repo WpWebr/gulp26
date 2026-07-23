@@ -1,0 +1,33 @@
+@use 'variables' as *;
+@use '../../scss/mixins' as *;
+
+.nav {
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__link {
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: $radius-sm;
+    color: $color-gray;
+    font-weight: 500;
+    transition: color $transition-fast, background $transition-fast;
+
+    &:hover,
+    &.is-active {
+      color: $color-white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &.is-active {
+      color: $color-primary;
+    }
+  }
+
+  @include respond-to(md) {
+    display: none;
+  }
+}

@@ -1,40 +1,41 @@
+@use 'variables' as *;
+@use '../../scss/mixins' as *;
+
 .hero {
-  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
-  color: #fff;
-  padding: 6rem 0;
+  min-height: calc(100vh - #{$header-height});
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-dark 100%);
+  color: $color-white;
   text-align: center;
 
   &__container {
+    @include container;
     max-width: 800px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
   }
 
   &__title {
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
     margin-bottom: 1rem;
     line-height: 1.2;
   }
 
   &__subtitle {
-    font-size: 1.25rem;
-    color: #b0b0b0;
-    margin-bottom: 2rem;
+    font-size: clamp(1rem, 2.5vw, 1.375rem);
+    color: rgba($color-white, 0.7);
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-inline: auto;
   }
 
-  &__cta {
-    display: inline-block;
-    background: #16c79a;
-    color: #fff;
-    padding: 0.875rem 2rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.3s ease;
-
-    &:hover {
-      background: #12a880;
-    }
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }

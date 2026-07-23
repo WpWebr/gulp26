@@ -1,16 +1,52 @@
+@use 'variables' as *;
+@use '../../scss/mixins' as *;
+
 .footer {
-  background: #1a1a2e;
-  color: #888;
+  flex-shrink: 0;
+  background: $color-dark;
+  color: $color-gray;
   padding: 2rem 0;
   text-align: center;
 
   &__container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    @include container;
   }
 
   &__copy {
     font-size: 0.875rem;
+  }
+
+  &__links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+
+    @include respond-to(sm) {
+      margin-bottom: 0;
+    }
+  }
+
+  &__link {
+    font-size: 0.875rem;
+    color: $color-gray;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  @include respond-to(sm) {
+    &__inner {
+      @include container;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__copy {
+      margin-bottom: 0;
+    }
   }
 }

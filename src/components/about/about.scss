@@ -1,0 +1,46 @@
+@use 'variables' as *;
+@use '../../scss/mixins' as *;
+
+.about {
+  padding: 5rem 0;
+  background: $color-light;
+
+  &__container {
+    @include container;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $color-dark;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+
+    @include respond-to(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__text {
+    font-size: 1.0625rem;
+    color: $color-text;
+    line-height: 1.8;
+
+    p + p {
+      margin-top: 1rem;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-md;
+  }
+}

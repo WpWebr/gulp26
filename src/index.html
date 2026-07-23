@@ -12,11 +12,34 @@
     "title": "@@title"
   })
 
-  <main>
-    @@include('components/hero/hero.html')
-  </main>
+  <div class="layout layout--sidebar-right">
 
-  @@include('components/footer/footer.html')
+    @@include('components/sidebar/sidebar.html', {
+      "title": "Navigation"
+    })
+
+    <div class="layout__overlay"></div>
+
+    <main class="layout__main">
+
+      @@include('components/hero/hero.html', {
+        "title": "Build Modern Websites",
+        "subtitle": "With Gulp 5, BEM architecture, and auto-discovered components"
+      })
+
+      @@include('components/features/features.html')
+
+      @@include('components/about/about.html')
+
+      @@include('components/contact/contact.html')
+
+    </main>
+
+  </div>
+
+  @@include('components/footer/footer.html', {
+    "title": "@@title"
+  })
 
   <script src="js/app.js"></script>
 </body>

@@ -1,0 +1,54 @@
+@use 'variables' as *;
+@use '../../scss/mixins' as *;
+
+.sidebar {
+  padding: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $color-dark;
+  }
+
+  &__close {
+    display: none;
+    font-size: 1.5rem;
+    color: $color-gray;
+    line-height: 1;
+
+    @include respond-to(md) {
+      display: block;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__link {
+    display: block;
+    padding: 0.625rem 0.75rem;
+    border-radius: $radius-sm;
+    color: $color-text;
+    transition: background $transition-fast, color $transition-fast;
+
+    &:hover,
+    &.is-active {
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+    }
+
+    &.is-active {
+      font-weight: 600;
+    }
+  }
+}

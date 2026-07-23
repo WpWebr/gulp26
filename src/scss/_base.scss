@@ -20,6 +20,9 @@ body {
   background: $color-light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 img {
@@ -35,4 +38,15 @@ a {
 
 ul, ol {
   list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+}
+
+input, textarea {
+  font: inherit;
 }
