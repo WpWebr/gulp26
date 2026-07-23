@@ -114,7 +114,11 @@
     "already_exists": "Project already exists at this path:",
     "overwrite_confirm": "Overwrite existing project? (y/n)",
     "overwrite_cancelled": "Project creation cancelled",
-    "overwrite_removing": "Removing old project..."
+    "overwrite_removing": "Removing old project...",
+    "external_delete_warning": "WARNING: Project is outside the build system workspace:",
+    "external_delete_confirm": "Delete files at external path? (y/n)",
+    "multiple_found": "Multiple projects found with name \"{{name}}\":",
+    "specify_path": "Use PROJECT_PATH env var to specify which one to remove"
   },
 
   "language": {

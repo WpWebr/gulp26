@@ -83,12 +83,20 @@ Gulp26 поддерживает управление несколькими пр
 # Создание с шаблоном
 PROJECT_NAME=my-site PROJECT_TEMPLATE=landing npx gulp project:create
 
-# Создание с произвольным путём
+# Создание с произвольным путём (включая другие диски)
 PROJECT_NAME=my-site PROJECT_PATH=/path/to/my-site npx gulp project:create
+
+# Windows (PowerShell) — проект на другом диске
+$env:PROJECT_NAME="my-site"; $env:PROJECT_PATH="E:\projects\my-site"; npx gulp project:create
+
+# Windows (Git Bash / MSYS2) — обязательно в кавычках!
+PROJECT_NAME="my-site" PROJECT_PATH="E:/projects/my-site" npx gulp project:create
 
 # Создание без шаблона (пустой проект)
 PROJECT_NAME=my-site npx gulp project:create
 ```
+
+Проекты могут находиться где угодно — внутри `projects/`, на другом диске (`E:\`, `/mnt/data/`), или в произвольном каталоге. При перезаписи или удалении проекта по внешнему пути система запросит дополнительное подтверждение для безопасности.
 
 ### Переключение проектов
 
@@ -105,6 +113,34 @@ npx gulp project:list
 # Деактивировать (вернуться к глобальной сборке)
 npx gulp project:deactivate
 ```
+
+### Удаление проекта
+
+```bash
+# Удалить только запись из реестра (файлы проекта сохраняются)
+PROJECT_NAME=my-site npx gulp project:remove
+
+# Удалить запись И файлы проекта
+PROJECT_NAME=my-site DELETE_FILES=true npx gulp project:remove
+
+# Windows (PowerShell)
+$env:PROJECT_NAME="my-site"; $env:DELETE_FILES="true"; npx gulp project:remove
+
+# Windows (Git Bash / MSYS2) — кавычки обязательны!
+PROJECT_NAME="my-site" DELETE_FILES="true" npx gulp project:remove
+```
+
+Если несколько проектов имеют одно имя (например, `my-site` в разных путях), система покажет все расположения и попросит указать нужное:
+
+```bash
+# Уточнить путь для удаления конкретного проекта
+PROJECT_NAME=my-site PROJECT_PATH=/path/to/target npx gulp project:remove
+
+# PowerShell
+$env:PROJECT_NAME="my-site"; $env:PROJECT_PATH="E:\projects\my-site"; $env:DELETE_FILES="true"; npx gulp project:remove
+```
+
+> Внешние проекты (вне рабочей области) требуют дополнительного подтверждения перед удалением файлов.
 
 ### Настройки проекта
 

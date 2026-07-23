@@ -83,12 +83,20 @@ Gulp26 supports managing multiple projects from a single build system. Each proj
 # Create with a template
 PROJECT_NAME=my-site PROJECT_TEMPLATE=landing npx gulp project:create
 
-# Create with a custom path
+# Create with a custom path (including other drives)
 PROJECT_NAME=my-site PROJECT_PATH=/path/to/my-site npx gulp project:create
+
+# Windows (PowerShell) — project on another drive
+$env:PROJECT_NAME="my-site"; $env:PROJECT_PATH="E:\projects\my-site"; npx gulp project:create
+
+# Windows (Git Bash / MSYS2) — quotes are required!
+PROJECT_NAME="my-site" PROJECT_PATH="E:/projects/my-site" npx gulp project:create
 
 # Create without a template (empty project)
 PROJECT_NAME=my-site npx gulp project:create
 ```
+
+Projects can live anywhere — inside `projects/`, on another drive (`E:\`, `/mnt/data/`), or in any arbitrary directory. When overwriting or deleting a project at an external path, the system will ask for additional confirmation for safety.
 
 ### Switching Projects
 
@@ -105,6 +113,34 @@ npx gulp project:list
 # Deactivate (return to global build mode)
 npx gulp project:deactivate
 ```
+
+### Removing a Project
+
+```bash
+# Remove only the registry entry (files stay on disk)
+PROJECT_NAME=my-site npx gulp project:remove
+
+# Remove registry entry AND delete project files
+PROJECT_NAME=my-site DELETE_FILES=true npx gulp project:remove
+
+# Windows (PowerShell)
+$env:PROJECT_NAME="my-site"; $env:DELETE_FILES="true"; npx gulp project:remove
+
+# Windows (Git Bash / MSYS2) — quotes are required!
+PROJECT_NAME="my-site" DELETE_FILES="true" npx gulp project:remove
+```
+
+If multiple projects share the same name (e.g. `my-site` at two different paths), the system lists all locations and asks you to specify which one to remove:
+
+```bash
+# Disambiguate by providing the exact path
+PROJECT_NAME=my-site PROJECT_PATH=/path/to/target npx gulp project:remove
+
+# PowerShell
+$env:PROJECT_NAME="my-site"; $env:PROJECT_PATH="E:\projects\my-site"; $env:DELETE_FILES="true"; npx gulp project:remove
+```
+
+> External projects (outside the workspace) require an additional confirmation before file deletion.
 
 ### Per-Project Configuration
 

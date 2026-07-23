@@ -66,10 +66,11 @@ task('project:create', async (done) => {
   done();
 });
 
-task('project:remove', (done) => {
-  projectRemove(
+task('project:remove', async (done) => {
+  await projectRemove(
     process.env.npm_config_name || process.env.PROJECT_NAME,
-    process.env.DELETE_FILES === 'true'
+    process.env.DELETE_FILES === 'true',
+    process.env.PROJECT_PATH
   );
   done();
 });

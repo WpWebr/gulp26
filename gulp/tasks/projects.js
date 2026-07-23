@@ -13,7 +13,11 @@ import {
   deactivateAll,
   listTemplates,
   findProjectByPath,
+  findProjectsByName,
   resolveProjectRoot,
+  normalizePath,
+  isPathInside,
+  ROOT,
 } from '../utils/project.js';
 import { info, success, warn, error } from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
@@ -96,7 +100,17 @@ export async function projectCreate(name, opts = {}) {
       }
 
       info(TASK, t('projects.overwrite_removing'));
-      removeProject(existing.name, true);
+
+      if (!isPathInside(existing.root, ROOT)) {
+        warn(TASK, `${t('projects.external_delete_warning')} ${existing.root}`);
+        const extConfirmed = await confirm(`  ${t('projects.external_delete_confirm')} `);
+        if (!extConfirmed) {
+          info(TASK, t('projects.overwrite_cancelled'));
+          return;
+        }
+      }
+
+      removeProject(existing.name, true, true);
     }
 
     const project = createProject({
@@ -122,20 +136,75 @@ export async function projectCreate(name, opts = {}) {
   }
 }
 
-export function projectRemove(name, deleteFiles = false) {
+export async function projectRemove(name, deleteFiles = false, rootPath) {
   if (!name) {
     warn(TASK, t('projects.usage_remove'));
     return;
   }
 
   try {
-    removeProject(name, deleteFiles);
-    success(TASK, `${t('projects.removed')} "${name}"`);
-    if (deleteFiles) {
-      info(TASK, t('projects.files_deleted'));
+    const matches = findProjectsByName(name);
+
+    if (matches.length === 0) {
+      throw new Error(`Project "${name}" not found`);
     }
+
+    // Multiple matches — disambiguate by path
+    if (matches.length > 1) {
+      if (rootPath) {
+        const match = matches.find(
+          (p) => normalizePath(p.root) === normalizePath(rootPath)
+        );
+        if (!match) {
+          throw new Error(
+            `Project "${name}" not found at path "${rootPath}".\n` +
+              `Available locations:\n` +
+              matches.map((p) => `  ${p.root}`).join('\n')
+          );
+        }
+        // Proceed with the narrowed-down match
+        await removeSingleProject(match, deleteFiles);
+        return;
+      }
+
+      // No path specified — show list and ask user to specify
+      warn(TASK, t('projects.multiple_found').replace('{{name}}', name));
+      for (const p of matches) {
+        info(TASK, `  ${p.root}`);
+      }
+      info(TASK, '');
+      info(TASK, t('projects.specify_path'));
+      return;
+    }
+
+    // Single match — proceed directly
+    await removeSingleProject(matches[0], deleteFiles);
   } catch (err) {
     error(TASK, err.message);
+  }
+}
+
+/**
+ * Remove a single matched project, handling external path confirmation.
+ * @param {import('../utils/project.js').Project} project
+ * @param {boolean} deleteFiles
+ */
+async function removeSingleProject(project, deleteFiles) {
+  if (deleteFiles && !isPathInside(project.root, ROOT)) {
+    warn(TASK, `${t('projects.external_delete_warning')} ${project.root}`);
+    const confirmed = await confirm(`  ${t('projects.external_delete_confirm')} `);
+    if (!confirmed) {
+      info(TASK, t('projects.overwrite_cancelled'));
+      return;
+    }
+    removeProject(project.name, true, true, project.root);
+  } else {
+    removeProject(project.name, deleteFiles, false, project.root);
+  }
+
+  success(TASK, `${t('projects.removed')} "${project.name}"`);
+  if (deleteFiles) {
+    info(TASK, t('projects.files_deleted'));
   }
 }
 

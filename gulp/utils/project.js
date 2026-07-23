@@ -17,6 +17,32 @@ const PROJECTS_JSON = path.join(ROOT, 'projects.json');
 const DEFAULT_PROJECTS_DIR = path.join(ROOT, 'projects');
 const TEMPLATES_DIR = path.join(ROOT, 'templates');
 
+export { ROOT };
+
+// ─── Path Helpers ────────────────────────────────────────────────────────────
+
+/**
+ * Normalize a path for comparison (case-insensitive on Windows).
+ * @param {string} p
+ * @returns {string}
+ */
+export function normalizePath(p) {
+  const resolved = path.resolve(p);
+  return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+}
+
+/**
+ * Check if `child` is inside or equal to `parent`.
+ * @param {string} child
+ * @param {string} parent
+ * @returns {boolean}
+ */
+export function isPathInside(child, parent) {
+  const c = normalizePath(child);
+  const p = normalizePath(parent);
+  return c === p || c.startsWith(p + path.sep);
+}
+
 /**
  * @typedef {object} Project
  * @property {string} name - Unique project identifier
@@ -95,8 +121,43 @@ export function projectExists(name) {
  * @returns {Project|null}
  */
 export function findProjectByPath(root) {
-  const normalized = path.resolve(root);
-  return readStore().projects.find((p) => path.resolve(p.root) === normalized) || null;
+  const normalized = normalizePath(root);
+  return readStore().projects.find((p) => normalizePath(p.root) === normalized) || null;
+}
+
+/**
+ * Find all projects matching a name.
+ * @param {string} name
+ * @returns {Project[]}
+ */
+export function findProjectsByName(name) {
+  return readStore().projects.filter((p) => p.name === name);
+}
+
+/**
+ * Normalize a custom path to fix MSYS2/Git Bash mangling.
+ * Replaces forward slashes with OS separators and collapses doubles.
+ * On Windows, detects Cyrillic drive letters and throws a helpful error.
+ * @param {string} p
+ * @returns {string}
+ */
+function normalizeCustomPath(p) {
+  if (!p) return p;
+
+  // Detect Cyrillic letters in drive letter position (e.g. "С:\...")
+  if (process.platform === 'win32' && /^[а-яА-ЯёЁ]:[\\/]/.test(p)) {
+    throw new Error(
+      `Path contains a Cyrillic letter in drive position: "${p}"\n` +
+        `Use a Latin letter instead (e.g. "C:${p.slice(2)}").\n` +
+        `Check your keyboard layout or copy-paste the path directly.`
+    );
+  }
+
+  let normalized = p.replace(/\/+/g, '/');
+  if (process.platform === 'win32') {
+    normalized = normalized.replace(/\//g, '\\');
+  }
+  return normalized;
 }
 
 /**
@@ -108,7 +169,7 @@ export function findProjectByPath(root) {
 export function resolveProjectRoot(name, customPath) {
   const safeName = name.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '-');
   return customPath
-    ? path.resolve(customPath)
+    ? path.resolve(normalizeCustomPath(customPath))
     : path.join(DEFAULT_PROJECTS_DIR, safeName);
 }
 
@@ -212,20 +273,48 @@ export function useProject(name) {
 
 /**
  * Remove a project from the registry. Optionally delete its files.
+ * If deleteFiles is true and the project root is outside the workspace,
+ * returns 'external' WITHOUT removing the store entry, so the caller
+ * can prompt for confirmation and call again with force=true.
+ *
  * @param {string} name
  * @param {boolean} [deleteFiles=false]
+ * @param {boolean} [force=false] - Skip external path safety check
+ * @param {string} [rootPath] - Narrow down when multiple projects share the same name
+ * @returns {'deleted'|'external'|undefined}
  */
-export function removeProject(name, deleteFiles = false) {
+export function removeProject(name, deleteFiles = false, force = false, rootPath) {
   const store = readStore();
-  const idx = store.projects.findIndex((p) => p.name === name);
+
+  let idx;
+  if (rootPath) {
+    const normalizedRoot = normalizePath(rootPath);
+    idx = store.projects.findIndex(
+      (p) => p.name === name && normalizePath(p.root) === normalizedRoot
+    );
+  } else {
+    idx = store.projects.findIndex((p) => p.name === name);
+  }
 
   if (idx === -1) {
-    throw new Error(`Project "${name}" not found`);
+    const matches = store.projects.filter((p) => p.name === name);
+    if (matches.length === 0) {
+      throw new Error(`Project "${name}" not found`);
+    }
+    throw new Error(
+      `Project "${name}" found at ${matches.length} locations but no path specified:\n` +
+        matches.map((p) => `  ${p.root}`).join('\n')
+    );
   }
 
   const project = store.projects[idx];
 
-  // Remove files if requested and project is inside our workspace
+  // External path without force — return early, don't touch the store
+  if (deleteFiles && !isPathInside(project.root, ROOT) && !force) {
+    return 'external';
+  }
+
+  // Delete files if requested
   if (deleteFiles && fs.existsSync(project.root)) {
     fs.rmSync(project.root, { recursive: true, force: true });
   }
@@ -238,6 +327,7 @@ export function removeProject(name, deleteFiles = false) {
   }
 
   writeStore(store);
+  return 'deleted';
 }
 
 /**

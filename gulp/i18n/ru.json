@@ -114,7 +114,11 @@
     "already_exists": "Проект уже существует по этому пути:",
     "overwrite_confirm": "Перезаписать существующий проект? (y/n)",
     "overwrite_cancelled": "Создание проекта отменено",
-    "overwrite_removing": "Удаление старого проекта..."
+    "overwrite_removing": "Удаление старого проекта...",
+    "external_delete_warning": "ВНИМАНИЕ: Проект находится за пределами рабочей области сборки:",
+    "external_delete_confirm": "Удалить файлы по внешнему пути? (y/n)",
+    "multiple_found": "Найдено несколько проектов с именем \"{{name}}\":",
+    "specify_path": "Укажите PROJECT_PATH для выбора конкретного проекта для удаления"
   },
 
   "language": {
