@@ -7,28 +7,24 @@ import fs from 'node:fs';
 import path from 'node:path';
 import config from '../config/index.js';
 import { info, success, timerStart, timerEnd } from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 import { browserSync } from '../plugins.js';
 
 const TASK = 'fonts';
 
-/**
- * Copy font files from source to destination.
- */
 export async function fonts() {
   timerStart('fonts');
-  info(TASK, 'Copying fonts...');
+  info(TASK, t('fonts.copying'));
 
   const srcDir = config.paths.src.fonts;
   const outDir = path.join(config.paths.dest.dev, config.paths.dest.fonts);
 
   if (!fs.existsSync(srcDir)) {
-    info(TASK, 'No fonts directory found, skipping');
+    info(TASK, t('fonts.no_directory'));
     return;
   }
 
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
-  }
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
   const fontExts = ['.woff', '.woff2', '.ttf', '.eot', '.otf'];
   const files = fs
@@ -42,16 +38,13 @@ export async function fonts() {
     const destFile = path.join(outDir, relPath);
     const destDir = path.dirname(destFile);
 
-    if (!fs.existsSync(destDir)) {
-      fs.mkdirSync(destDir, { recursive: true });
-    }
-
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(srcFile, destFile);
     count++;
   }
 
   const time = timerEnd('fonts');
-  success(TASK, `${count} font files copied in ${time}`);
+  success(TASK, `${count} ${t('fonts.copied')} ${t('common.built_in')} ${time}`);
 
   browserSync.reload();
 }

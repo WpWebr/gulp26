@@ -5,6 +5,10 @@
  */
 
 export default {
+  language: {
+    language: 'en',
+  },
+
   modes: {
     css: {
       bundle: true,

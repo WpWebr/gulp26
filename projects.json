@@ -1,4 +1,23 @@
 {
   "activeProject": null,
-  "projects": []
+  "projects": [
+    {
+      "name": "my-site",
+      "root": "D:\\#_arbeit\\mu\\gulp26\\projects\\my-site",
+      "src": "src",
+      "dest": "dist",
+      "active": false,
+      "template": null,
+      "created": "2026-07-23T17:42:55.665Z"
+    },
+    {
+      "name": "my-site",
+      "root": "D:\\#_arbeit\\mu\\gulp26\\projects\\my-site",
+      "src": "src",
+      "dest": "dist",
+      "active": false,
+      "template": "landing",
+      "created": "2026-07-23T17:48:39.830Z"
+    }
+  ]
 }

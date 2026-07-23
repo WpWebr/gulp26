@@ -21,6 +21,8 @@ import {
   projectRemove,
   projectDeactivate,
 } from './gulp/tasks/projects.js';
+import { t, getLanguage, setLanguage, listLanguages } from './gulp/utils/i18n.js';
+import { info, success } from './gulp/utils/logger.js';
 
 const dev = series(
   clean,
@@ -74,5 +76,19 @@ task('project:remove', (done) => {
 
 task('project:deactivate', (done) => {
   projectDeactivate();
+  done();
+});
+
+// Language tasks
+task('lang', (done) => {
+  const lang = process.env.LANGUAGE;
+  if (lang) {
+    setLanguage(lang);
+    success('lang', `${t('language.switched')} ${lang}`);
+  } else {
+    info('lang', `${t('language.current')}: ${getLanguage()}`);
+    info('lang', `${t('language.available')}: ${listLanguages().join(', ')}`);
+    info('lang', t('language.set_hint'));
+  }
   done();
 });

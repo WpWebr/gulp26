@@ -1,0 +1,122 @@
+{
+  "common": {
+    "complete_in": "complete in",
+    "files": "files",
+    "built_in": "built in",
+    "skipped": "skipped",
+    "found": "Found",
+    "no_files": "No files found",
+    "running": "Running...",
+    "done": "Done",
+    "error": "Error",
+    "usage": "Usage",
+    "not_found": "not found",
+    "available": "Available",
+    "next_steps": "Next steps"
+  },
+
+  "clean": {
+    "removing": "Removing build directories...",
+    "complete": "Clean complete"
+  },
+
+  "styles": {
+    "compiling": "Compiling SCSS...",
+    "bundle_done": "Styles bundle",
+    "separate_done": "Separate styles",
+    "complete": "Styles",
+    "failed": "Failed to compile"
+  },
+
+  "scripts": {
+    "bundling": "Bundling JavaScript...",
+    "bundle_done": "JS bundle",
+    "separate_done": "Separate scripts",
+    "complete": "Scripts",
+    "bundle_failed": "Bundle build failed",
+    "component_failed": "Component build failed",
+    "no_app_js": "No app.js found, skipping bundle",
+    "metafile_written": "Metafile written for analysis"
+  },
+
+  "pages": {
+    "processing": "Processing HTML...",
+    "bundle_done": "Pages bundle",
+    "separate_done": "Separate pages",
+    "complete": "Pages",
+    "bundle_time": "Pages bundle complete in"
+  },
+
+  "images": {
+    "processing": "Processing images...",
+    "no_directory": "No images directory found, skipping",
+    "no_files": "No images found, skipping",
+    "processed": "images processed",
+    "failed": "Failed to process"
+  },
+
+  "svg": {
+    "processing": "Processing SVG...",
+    "no_directory": "No svg directory found, skipping",
+    "no_files": "No SVG files found, skipping sprite",
+    "sprite_done": "SVG sprite",
+    "complete": "SVG",
+    "sprite_time": "SVG sprite complete in"
+  },
+
+  "fonts": {
+    "copying": "Copying fonts...",
+    "no_directory": "No fonts directory found, skipping",
+    "copied": "font files",
+    "complete": "Fonts",
+    "time": "Fonts complete in"
+  },
+
+  "serve": {
+    "server_running": "Dev server running at",
+    "watching": "Watching for changes...",
+    "global_scss": "Global SCSS changed",
+    "global_js": "Global JS changed",
+    "html_changed": "HTML changed",
+    "image_changed": "Image changed",
+    "svg_changed": "SVG changed",
+    "font_changed": "Font changed"
+  },
+
+  "components": {
+    "scanning": "Scanning components...",
+    "found": "components found",
+    "no_components": "No components found",
+    "scan_complete": "Component scan complete"
+  },
+
+  "projects": {
+    "no_projects": "No projects registered. Create one with: npx gulp project:create <name>",
+    "found_projects": "projects found",
+    "active": "active",
+    "path": "path",
+    "template": "template",
+    "switched": "Switched to project",
+    "src": "src",
+    "dest": "dest",
+    "run_build": "Run \"npx gulp build\" to build this project",
+    "created": "Project created",
+    "removed": "Project removed",
+    "files_deleted": "Project files were also deleted",
+    "all_deactivated": "All projects deactivated. Using global configuration.",
+    "name_required": "Project name is required",
+    "not_found": "not found. Available:",
+    "none": "(none)",
+    "usage_create": "Usage: npx gulp project:create <name> [--template <tpl>] [--path <path>]",
+    "usage_use": "Usage: npx gulp project:use <name>",
+    "usage_remove": "Usage: npx gulp project:remove <name> [--delete-files]",
+    "available_templates": "Available templates:"
+  },
+
+  "language": {
+    "current": "Current language",
+    "switched": "Language switched to",
+    "available": "Available languages",
+    "set_hint": "Set via LANGUAGE env var or gulp.config.js"
+  }
+}

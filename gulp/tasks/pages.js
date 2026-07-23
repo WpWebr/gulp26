@@ -13,21 +13,15 @@ import config from '../config/index.js';
 import { isProduction, isDebug, isDev } from '../utils/env.js';
 import { discoverComponents } from '../utils/component.js';
 import { info, success, timerStart, timerEnd } from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 import { browserSync } from '../plugins.js';
 
 const TASK = 'pages';
 
-/**
- * Get output directory for HTML.
- * @returns {string}
- */
 function getOutputDir() {
   return path.join(config.paths.dest.dev, config.paths.dest.html);
 }
 
-/**
- * Bundle mode: compile main HTML files with file-include.
- */
 async function pagesBundle() {
   timerStart('pages-bundle');
 
@@ -49,23 +43,14 @@ async function pagesBundle() {
         })
       );
 
-    if (isProduction) {
-      stream.pipe(dest(outputDir)).on('end', () => {
-        success(TASK, 'Bundle pages built (minified separately)');
-        resolve();
-      }).on('error', reject);
-    } else {
-      stream.pipe(dest(outputDir)).on('end', () => {
-        success(TASK, 'Bundle pages built');
-        resolve();
-      }).on('error', reject);
-    }
+    stream.pipe(dest(outputDir)).on('end', () => {
+      const time = timerEnd('pages-bundle');
+      success(TASK, `${t('pages.bundle_done')} ${t('common.built_in')} ${time}`);
+      resolve();
+    }).on('error', reject);
   });
 }
 
-/**
- * Separate mode: compile each component's HTML independently.
- */
 async function pagesSeparate() {
   timerStart('pages-separate');
 
@@ -82,7 +67,6 @@ async function pagesSeparate() {
     const content = fs.readFileSync(comp.htmlPath, 'utf-8');
 
     let processed = content;
-    // Simple include resolution for component HTML
     processed = processed.replace(
       /@@include\(['"]([^'"]+)['"]\)/g,
       (_, incPath) => {
@@ -100,15 +84,12 @@ async function pagesSeparate() {
   }
 
   const time = timerEnd('pages-separate');
-  success(TASK, `Separate pages built in ${time}`);
+  success(TASK, `${t('pages.separate_done')} ${t('common.built_in')} ${time}`);
 }
 
-/**
- * Main pages task. Respects html.mode setting.
- */
 export async function pages() {
   timerStart('pages');
-  info(TASK, 'Processing HTML...');
+  info(TASK, t('pages.processing'));
 
   const { mode } = config.modes.html;
 
@@ -116,7 +97,7 @@ export async function pages() {
   if (mode === 'separate' || mode === 'both') await pagesSeparate();
 
   const time = timerEnd('pages');
-  success(TASK, `Pages complete in ${time}`);
+  success(TASK, `${t('pages.complete')} ${t('common.complete_in')} ${time}`);
 
   browserSync.reload();
 }

@@ -13,66 +13,53 @@ import {
   listTemplates,
 } from '../utils/project.js';
 import { info, success, warn, error } from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 
 const TASK = 'projects';
 
-/**
- * List all registered projects and highlight the active one.
- */
 export function projectList() {
   const projects = listProjects();
   const active = getActiveProject();
 
   if (projects.length === 0) {
-    info(TASK, 'No projects registered. Create one with: npx gulp project:create <name>');
+    info(TASK, t('projects.no_projects'));
     return;
   }
 
-  info(TASK, `Found ${projects.length} project(s):`);
+  info(TASK, `${t('common.found')} ${projects.length} ${t('projects.found_projects')}:`);
   for (const p of projects) {
     const marker = p.name === active?.name ? '  * ' : '    ';
-    const label = p.name === active?.name ? `${p.name} (active)` : p.name;
+    const label = p.name === active?.name ? `${p.name} (${t('projects.active')})` : p.name;
     info(TASK, `${marker}${label}`);
-    info(TASK, `      path: ${p.root}`);
-    if (p.template) info(TASK, `      template: ${p.template}`);
+    info(TASK, `      ${t('projects.path')}: ${p.root}`);
+    if (p.template) info(TASK, `      ${t('projects.template')}: ${p.template}`);
   }
 }
 
-/**
- * Switch to a project by name. All subsequent builds will use this project's config.
- * @param {string} name
- */
 export function projectUse(name) {
   if (!name) {
-    warn(TASK, 'Usage: npx gulp project:use <name>');
+    warn(TASK, t('projects.usage_use'));
     return;
   }
 
   try {
     const project = useProject(name);
-    success(TASK, `Switched to project "${project.name}"`);
-    info(TASK, `  root: ${project.root}`);
-    info(TASK, `  src:  ${project.src}`);
-    info(TASK, `  dest: ${project.dest}`);
-    info(TASK, 'Run "npx gulp build" to build this project');
+    success(TASK, `${t('projects.switched')} "${project.name}"`);
+    info(TASK, `  ${t('projects.path')}: ${project.root}`);
+    info(TASK, `  ${t('projects.src')}:  ${project.src}`);
+    info(TASK, `  ${t('projects.dest')}: ${project.dest}`);
+    info(TASK, t('projects.run_build'));
   } catch (err) {
     error(TASK, err.message);
   }
 }
 
-/**
- * Create a new project.
- * @param {string} name - Project name
- * @param {object} [opts] - Options
- * @param {string} [opts.template] - Template to scaffold from
- * @param {string} [opts.path] - Custom path
- */
 export function projectCreate(name, opts = {}) {
   if (!name) {
-    warn(TASK, 'Usage: npx gulp project:create <name> [--template <tpl>] [--path <path>]');
+    warn(TASK, t('projects.usage_create'));
     const templates = listTemplates();
     if (templates.length > 0) {
-      info(TASK, `Available templates: ${templates.join(', ')}`);
+      info(TASK, `${t('projects.available_templates')} ${templates.join(', ')}`);
     }
     return;
   }
@@ -84,49 +71,41 @@ export function projectCreate(name, opts = {}) {
       path: opts.path,
     });
 
-    success(TASK, `Project "${project.name}" created`);
-    info(TASK, `  path: ${project.root}`);
-    info(TASK, `  src:  ${project.src}`);
+    success(TASK, `${t('projects.created')} "${project.name}"`);
+    info(TASK, `  ${t('projects.path')}: ${project.root}`);
+    info(TASK, `  ${t('projects.src')}:  ${project.src}`);
 
     if (opts.template) {
-      info(TASK, `  template: ${opts.template}`);
+      info(TASK, `  ${t('projects.template')}: ${opts.template}`);
     }
 
     info(TASK, '');
-    info(TASK, 'Next steps:');
-    info(TASK, `  npx gulp project:use ${project.name}   # Switch to this project`);
-    info(TASK, '  npx gulp dev                           # Start development');
+    info(TASK, `${t('common.next_steps')}:`);
+    info(TASK, `  npx gulp project:use ${project.name}`);
+    info(TASK, '  npx gulp dev');
   } catch (err) {
     error(TASK, err.message);
   }
 }
 
-/**
- * Remove a project from the registry.
- * @param {string} name
- * @param {boolean} [deleteFiles]
- */
 export function projectRemove(name, deleteFiles = false) {
   if (!name) {
-    warn(TASK, 'Usage: npx gulp project:remove <name> [--delete-files]');
+    warn(TASK, t('projects.usage_remove'));
     return;
   }
 
   try {
     removeProject(name, deleteFiles);
-    success(TASK, `Project "${name}" removed`);
+    success(TASK, `${t('projects.removed')} "${name}"`);
     if (deleteFiles) {
-      info(TASK, 'Project files were also deleted');
+      info(TASK, t('projects.files_deleted'));
     }
   } catch (err) {
     error(TASK, err.message);
   }
 }
 
-/**
- * Deactivate all projects (return to global build mode).
- */
 export function projectDeactivate() {
   deactivateAll();
-  success(TASK, 'All projects deactivated. Using global configuration.');
+  success(TASK, t('projects.all_deactivated'));
 }

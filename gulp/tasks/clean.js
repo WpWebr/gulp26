@@ -6,9 +6,12 @@
 import { deleteAsync } from '../plugins.js';
 import config from '../config/index.js';
 import { info, success } from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
+
+const TASK = 'clean';
 
 export async function clean() {
-  info('clean', 'Removing build directories...');
+  info(TASK, t('clean.removing'));
   await deleteAsync([config.paths.dest.dev, config.paths.dest.prod]);
-  success('clean', 'Clean complete');
+  success(TASK, t('clean.complete'));
 }

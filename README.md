@@ -35,6 +35,10 @@ A modular, scalable, and extensible build system based on **Gulp 5** for HTML an
 - [Watch and Live Reload](#watch-and-live-reload)
 - [Adding a New Task](#adding-a-new-task)
 - [Extending Configuration](#extending-configuration)
+- [Internationalization (i18n)](#internationalization-i18n)
+  - [Switching Language](#switching-language)
+  - [Adding a New Language](#adding-a-new-language)
+  - [Translation File Structure](#translation-file-structure)
 - [Dependencies](#dependencies)
 - [Architecture](#architecture)
 
@@ -556,6 +560,145 @@ export default {
 ```
 
 The deep merge ensures partial overrides work correctly.
+
+## Internationalization (i18n)
+
+All terminal messages (build status, errors, component info) are translated via the `t()` function. Ships with **English** and **Russian** out of the box.
+
+### Switching Language
+
+**Option 1: Environment variable** (highest priority)
+
+```bash
+LANGUAGE=ru npx gulp build
+```
+
+**Option 2: Config file** (`gulp.config.js`)
+
+```js
+export default {
+  language: {
+    language: 'ru',
+  },
+  // ... other config
+};
+```
+
+**Option 3: Check current language**
+
+```bash
+npx gulp lang
+# [lang] Current language: en
+# [lang] Available languages: en, ru
+# [lang] Set via LANGUAGE env var or gulp.config.js
+```
+
+### Adding a New Language
+
+1. Copy an existing translation file:
+
+```bash
+cp gulp/i18n/en.json gulp/i18n/de.json
+```
+
+2. Translate all values in `gulp/i18n/de.json`:
+
+```json
+{
+  "common": {
+    "complete_in": "fertig in",
+    "files": "Dateien",
+    "built_in": "erstellt in",
+    "skipped": "übersprungen",
+    "found": "Gefunden",
+    "no_files": "Keine Dateien gefunden",
+    "running": "Wird ausgeführt...",
+    "done": "Fertig",
+    "error": "Fehler",
+    "usage": "Verwendung",
+    "not_found": "nicht gefunden",
+    "available": "Verfügbare",
+    "next_steps": "Nächste Schritte"
+  },
+  "clean": {
+    "removing": "Build-Verzeichnisse werden entfernt...",
+    "complete": "Bereinigung abgeschlossen"
+  },
+  "styles": {
+    "compiling": "SCSS wird kompiliert...",
+    "bundle_done": "CSS-Bundle",
+    "separate_done": "Einzelne Styles",
+    "complete": "Styles",
+    "failed": "Kompilierung fehlgeschlagen"
+  }
+  // ... translate all sections
+}
+```
+
+3. Use it:
+
+```bash
+LANGUAGE=de npx gulp build
+```
+
+### Translation File Structure
+
+Each file in `gulp/i18n/` follows this structure:
+
+```
+gulp/i18n/
+├── en.json    # English (default)
+├── ru.json    # Russian
+└── de.json    # German (add your own)
+```
+
+**Key categories:**
+
+| Section | Description |
+|---------|-------------|
+| `common` | Shared phrases: "complete in", "built in", "files", "found" |
+| `clean` | Clean task messages |
+| `styles` | SCSS compilation messages |
+| `scripts` | JavaScript bundling messages |
+| `pages` | HTML processing messages |
+| `images` | Image optimization messages |
+| `svg` | SVG sprite messages |
+| `fonts` | Font copying messages |
+| `serve` | Watch/server messages |
+| `components` | Component diagnostics |
+| `projects` | Project management CLI messages |
+| `language` | Language switching messages |
+
+**Adding translations for new tasks:**
+
+When creating a new task, add translation keys to both `en.json` and `ru.json`:
+
+```js
+// In your task file
+import { t } from '../utils/i18n.js';
+
+export async function myTask() {
+  info(TASK, t('my_task.starting'));
+  // ...
+  success(TASK, `${t('my_task.done')} ${t('common.complete_in')} ${time}`);
+}
+```
+
+Add corresponding keys to translation files:
+
+```json
+// en.json
+"my_task": {
+  "starting": "Running my task...",
+  "done": "Task complete"
+}
+
+// ru.json
+"my_task": {
+  "starting": "Выполнение задачи...",
+  "done": "Задача выполнена"
+}
+```
 
 ## Dependencies
 

@@ -1,10 +1,8 @@
 /**
  * @file gulp/tasks/serve.js
  * @description BrowserSync dev server with intelligent file watching.
- * Rebuilds only the affected component on change.
  */
 
-import path from 'node:path';
 import { watch, series } from 'gulp';
 import config from '../config/index.js';
 import { browserSync } from '../plugins.js';
@@ -15,54 +13,44 @@ import { images } from './images.js';
 import { svgSprite } from './svg.js';
 import { fonts } from './fonts.js';
 import { info, success, componentRebuild } from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 import { findComponentByFile } from '../utils/component.js';
 
 const TASK = 'serve';
 
-/**
- * Start BrowserSync server.
- */
 function initServer(done) {
   browserSync.init({
-    server: {
-      baseDir: config.paths.dest.dev,
-    },
+    server: { baseDir: config.paths.dest.dev },
     port: config.server.port,
     open: config.server.open,
     notify: config.server.notify,
     reloadDebounce: config.server.reloadDebounce,
   });
-  success(TASK, `Dev server running at http://localhost:${config.server.port}`);
+  success(TASK, `${t('serve.server_running')} http://localhost:${config.server.port}`);
   done();
 }
 
-/**
- * Watch all source files and trigger appropriate rebuilds.
- */
 function watchFiles() {
   const { components, scss, js, html, images: imgDir, fonts: fontsDir, svg: svgDir } = config.paths.src;
 
-  // SCSS changes
   watch(`${scss}/**/*.scss`, series(styles)).on('change', (filePath) => {
     const comp = findComponentByFile(filePath, components);
     if (comp) {
       componentRebuild(comp.name, 'css');
     } else {
-      info(TASK, 'Global SCSS changed');
+      info(TASK, t('serve.global_scss'));
     }
   });
 
-  // JS changes
   watch(`${js}/**/*.js`, series(scripts)).on('change', (filePath) => {
     const comp = findComponentByFile(filePath, components);
     if (comp) {
       componentRebuild(comp.name, 'js');
     } else {
-      info(TASK, 'Global JS changed');
+      info(TASK, t('serve.global_js'));
     }
   });
 
-  // HTML changes (pages + partials + components)
   watch(
     [html, `${config.paths.src.root}/**/*.html`, `${components}/**/*.html`],
     series(pages)
@@ -71,29 +59,23 @@ function watchFiles() {
     if (comp) {
       componentRebuild(comp.name, 'html');
     } else {
-      info(TASK, 'HTML changed');
+      info(TASK, t('serve.html_changed'));
     }
   });
 
-  // Image changes
   watch(`${imgDir}/**/*`, series(images)).on('change', () => {
-    info(TASK, 'Image changed');
+    info(TASK, t('serve.image_changed'));
   });
 
-  // SVG changes
   watch(`${svgDir}/**/*.svg`, series(svgSprite)).on('change', () => {
-    info(TASK, 'SVG changed');
+    info(TASK, t('serve.svg_changed'));
   });
 
-  // Font changes
   watch(`${fontsDir}/**/*`, series(fonts)).on('change', () => {
-    info(TASK, 'Font changed');
+    info(TASK, t('serve.font_changed'));
   });
 
-  info(TASK, 'Watching for changes...');
+  info(TASK, t('serve.watching'));
 }
 
-/**
- * Serve task: start server + watch.
- */
 export const serve = series(initServer, watchFiles);

@@ -1,0 +1,122 @@
+{
+  "common": {
+    "complete_in": "выполнено за",
+    "files": "файлов",
+    "built_in": "собрано за",
+    "skipped": "пропущено",
+    "found": "Найдено",
+    "no_files": "Файлы не найдены",
+    "running": "Выполняется...",
+    "done": "Готово",
+    "error": "Ошибка",
+    "usage": "Использование",
+    "not_found": "не найден",
+    "available": "Доступные",
+    "next_steps": "Следующие шаги"
+  },
+
+  "clean": {
+    "removing": "Удаление директорий сборки...",
+    "complete": "Очистка завершена"
+  },
+
+  "styles": {
+    "compiling": "Компиляция SCSS...",
+    "bundle_done": "CSS-бандл",
+    "separate_done": "Отдельные стили",
+    "complete": "Стили",
+    "failed": "Ошибка компиляции"
+  },
+
+  "scripts": {
+    "bundling": "Бандлинг JavaScript...",
+    "bundle_done": "JS-бандл",
+    "separate_done": "Отдельные скрипты",
+    "complete": "Скрипты",
+    "bundle_failed": "Ошибка сборки бандла",
+    "component_failed": "Ошибка сборки компонента",
+    "no_app_js": "app.js не найден, пропуск бандла",
+    "metafile_written": "Метафайл записан для анализа"
+  },
+
+  "pages": {
+    "processing": "Обработка HTML...",
+    "bundle_done": "Страницы бандла",
+    "separate_done": "Отдельные страницы",
+    "complete": "Страницы",
+    "bundle_time": "Страницы бандла выполнены за"
+  },
+
+  "images": {
+    "processing": "Обработка изображений...",
+    "no_directory": "Директория изображений не найдена, пропуск",
+    "no_files": "Изображения не найдены, пропуск",
+    "processed": "изображений обработано",
+    "failed": "Ошибка обработки"
+  },
+
+  "svg": {
+    "processing": "Обработка SVG...",
+    "no_directory": "Директория svg не найдена, пропуск",
+    "no_files": "SVG-файлы не найдены, пропуск спрайта",
+    "sprite_done": "SVG-спрайт",
+    "complete": "SVG",
+    "sprite_time": "SVG-спрайт выполнен за"
+  },
+
+  "fonts": {
+    "copying": "Копирование шрифтов...",
+    "no_directory": "Директория шрифтов не найдена, пропуск",
+    "copied": "файлов шрифтов",
+    "complete": "Шрифты",
+    "time": "Шрифты выполнены за"
+  },
+
+  "serve": {
+    "server_running": "Dev-сервер запущен на",
+    "watching": "Отслеживание изменений...",
+    "global_scss": "Глобальный SCSS изменён",
+    "global_js": "Глобальный JS изменён",
+    "html_changed": "HTML изменён",
+    "image_changed": "Изображение изменено",
+    "svg_changed": "SVG изменён",
+    "font_changed": "Шрифт изменён"
+  },
+
+  "components": {
+    "scanning": "Сканирование компонентов...",
+    "found": "компонентов найдено",
+    "no_components": "Компоненты не найдены",
+    "scan_complete": "Сканирование компонентов завершено"
+  },
+
+  "projects": {
+    "no_projects": "Проекты не зарегистрированы. Создайте: npx gulp project:create <имя>",
+    "found_projects": "проектов найдено",
+    "active": "активный",
+    "path": "путь",
+    "template": "шаблон",
+    "switched": "Переключено на проект",
+    "src": "источники",
+    "dest": "выход",
+    "run_build": "Запустите \"npx gulp build\" для сборки проекта",
+    "created": "Проект создан",
+    "removed": "Проект удалён",
+    "files_deleted": "Файлы проекта также удалены",
+    "all_deactivated": "Все проекты деактивированы. Используется глобальная конфигурация.",
+    "name_required": "Имя проекта обязательно",
+    "not_found": "не найден. Доступные:",
+    "none": "(нет)",
+    "usage_create": "Использование: npx gulp project:create <имя> [--template <шаблон>] [--path <путь>]",
+    "usage_use": "Использование: npx gulp project:use <имя>",
+    "usage_remove": "Использование: npx gulp project:remove <имя> [--delete-files]",
+    "available_templates": "Доступные шаблоны:"
+  },
+
+  "language": {
+    "current": "Текущий язык",
+    "switched": "Язык переключён на",
+    "available": "Доступные языки",
+    "set_hint": "Установка через переменную LANGUAGE или gulp.config.js"
+  }
+}

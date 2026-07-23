@@ -11,14 +11,11 @@ import config from '../config/index.js';
 import { isProduction, isDebug, isDev } from '../utils/env.js';
 import { discoverComponents } from '../utils/component.js';
 import { info, success, error, timerStart, timerEnd } from '../utils/logger.js';
+import { t } from '../utils/i18n.js';
 import { browserSync } from '../plugins.js';
 
 const TASK = 'scripts';
 
-/**
- * Get common esbuild options based on current build mode.
- * @returns {import('esbuild').BuildOptions}
- */
 function getBaseOptions() {
   return {
     target: config.js.target,
@@ -34,10 +31,6 @@ function getBaseOptions() {
   };
 }
 
-/**
- * Bundle mode: compile main app.js + all component JS into one bundle.
- * Uses a temporary entry file that imports app.js then all components.
- */
 async function scriptsBundle() {
   timerStart('scripts-bundle');
 
@@ -45,7 +38,7 @@ async function scriptsBundle() {
   const outdir = path.join(config.paths.dest.dev, config.paths.dest.js);
 
   if (!fs.existsSync(appJs)) {
-    info(TASK, 'No app.js found, skipping bundle');
+    info(TASK, t('scripts.no_app_js'));
     return;
   }
 
@@ -84,13 +77,13 @@ async function scriptsBundle() {
       const metaPath = path.join(outdir, 'meta.json');
       if (!fs.existsSync(outdir)) fs.mkdirSync(outdir, { recursive: true });
       fs.writeFileSync(metaPath, JSON.stringify(result.metafile, null, 2), 'utf-8');
-      info(TASK, 'Metafile written for analysis');
+      info(TASK, t('scripts.metafile_written'));
     }
 
     const time = timerEnd('scripts-bundle');
-    success(TASK, `Bundle built in ${time}`);
+    success(TASK, `${t('scripts.bundle_done')} ${t('common.built_in')} ${time}`);
   } catch (err) {
-    error(TASK, `Bundle build failed: ${err.message}`);
+    error(TASK, `${t('scripts.bundle_failed')}: ${err.message}`);
     throw err;
   } finally {
     if (tmpDir && fs.existsSync(tmpDir)) {
@@ -99,9 +92,6 @@ async function scriptsBundle() {
   }
 }
 
-/**
- * Separate mode: compile each component's JS independently.
- */
 async function scriptsSeparate() {
   timerStart('scripts-separate');
 
@@ -111,32 +101,27 @@ async function scriptsSeparate() {
 
   for (const comp of jsComponents) {
     try {
-      const options = {
+      await esbuild.build({
         ...getBaseOptions(),
         entryPoints: [comp.jsPath],
         outdir,
         outfile: path.join(outdir, `${comp.name}.js`),
         splitting: false,
         format: 'iife',
-      };
-
-      await esbuild.build(options);
+      });
     } catch (err) {
-      error(TASK, `Component ${comp.name} build failed: ${err.message}`);
+      error(TASK, `${t('scripts.component_failed')} ${comp.name}: ${err.message}`);
       throw err;
     }
   }
 
   const time = timerEnd('scripts-separate');
-  success(TASK, `Separate scripts built in ${time}`);
+  success(TASK, `${t('scripts.separate_done')} ${t('common.built_in')} ${time}`);
 }
 
-/**
- * Main scripts task. Respects js.bundle and js.separate modes.
- */
 export async function scripts() {
   timerStart('scripts');
-  info(TASK, 'Bundling JavaScript...');
+  info(TASK, t('scripts.bundling'));
 
   const { bundle, separate } = config.modes.js;
 
@@ -144,7 +129,7 @@ export async function scripts() {
   if (separate) await scriptsSeparate();
 
   const time = timerEnd('scripts');
-  success(TASK, `Scripts complete in ${time}`);
+  success(TASK, `${t('scripts.complete')} ${t('common.complete_in')} ${time}`);
 
   browserSync.reload();
 }

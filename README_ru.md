@@ -35,6 +35,10 @@
 - [Watch и Live Reload](#watch-и-live-reload)
 - [Добавление новой задачи](#добавление-новой-задачи)
 - [Расширение конфигурации](#расширение-конфигурации)
+- [Интернационализация (i18n)](#интернационализация-i18n)
+  - [Переключение языка](#переключение-языка)
+  - [Добавление нового языка](#добавление-нового-языка)
+  - [Структура файлов переводов](#структура-файлов-переводов)
 - [Зависимости](#зависимости)
 - [Архитектура](#архитектура)
 
@@ -556,6 +560,145 @@ export default {
 ```
 
 Deep merge обеспечивает корректную работу частичных override-ов.
+
+## Интернационализация (i18n)
+
+Все сообщения в терминале (статус сборки, ошибки, информация о компонентах) переводятся через функцию `t()`. Из коробки поддерживаются **русский** и **английский** языки.
+
+### Переключение языка
+
+**Вариант 1: Переменная окружения** (наивысший приоритет)
+
+```bash
+LANGUAGE=ru npx gulp build
+```
+
+**Вариант 2: Конфигурационный файл** (`gulp.config.js`)
+
+```js
+export default {
+  language: {
+    language: 'ru',
+  },
+  // ... остальная конфигурация
+};
+```
+
+**Вариант 3: Проверить текущий язык**
+
+```bash
+npx gulp lang
+# [lang] Текущий язык: ru
+# [lang] Доступные языки: en, ru
+# [lang] Установка через переменную LANGUAGE или gulp.config.js
+```
+
+### Добавление нового языка
+
+1. Скопируй существующий файл перевода:
+
+```bash
+cp gulp/i18n/en.json gulp/i18n/de.json
+```
+
+2. Переведи все значения в `gulp/i18n/de.json`:
+
+```json
+{
+  "common": {
+    "complete_in": "fertig in",
+    "files": "Dateien",
+    "built_in": "erstellt in",
+    "skipped": "übersprungen",
+    "found": "Gefunden",
+    "no_files": "Keine Dateien gefunden",
+    "running": "Wird ausgeführt...",
+    "done": "Fertig",
+    "error": "Fehler",
+    "usage": "Verwendung",
+    "not_found": "nicht gefunden",
+    "available": "Verfügbare",
+    "next_steps": "Nächste Schritte"
+  },
+  "clean": {
+    "removing": "Build-Verzeichnisse werden entfernt...",
+    "complete": "Bereinigung abgeschlossen"
+  },
+  "styles": {
+    "compiling": "SCSS wird kompiliert...",
+    "bundle_done": "CSS-Bundle",
+    "separate_done": "Einzelne Styles",
+    "complete": "Styles",
+    "failed": "Kompilierung fehlgeschlagen"
+  }
+  // ... переведи все секции
+}
+```
+
+3. Используй:
+
+```bash
+LANGUAGE=de npx gulp build
+```
+
+### Структура файлов переводов
+
+Каждый файл в `gulp/i18n/` имеет следующую структуру:
+
+```
+gulp/i18n/
+├── en.json    # Английский (по умолчанию)
+├── ru.json    # Русский
+└── de.json    # Немецкий (добавь свой)
+```
+
+**Категории ключей:**
+
+| Секция | Описание |
+|--------|----------|
+| `common` | Общие фразы: "выполнено за", "собрано за", "файлов", "найдено" |
+| `clean` | Сообщения задачи очистки |
+| `styles` | Сообщения компиляции SCSS |
+| `scripts` | Сообщения бандлинга JavaScript |
+| `pages` | Сообщения обработки HTML |
+| `images` | Сообщения оптимизации изображений |
+| `svg` | Сообщения SVG-спрайтов |
+| `fonts` | Сообщения копирования шрифтов |
+| `serve` | Сообщения watch/сервера |
+| `components` | Диагностика компонентов |
+| `projects` | CLI управления проектами |
+| `language` | Сообщения переключения языка |
+
+**Добавление переводов для новых задач:**
+
+При создании новой задачи добавь ключи перевода в оба файла `en.json` и `ru.json`:
+
+```js
+// В файле задачи
+import { t } from '../utils/i18n.js';
+
+export async function myTask() {
+  info(TASK, t('my_task.starting'));
+  // ...
+  success(TASK, `${t('my_task.done')} ${t('common.complete_in')} ${time}`);
+}
+```
+
+Добавь соответствующие ключи в файлы переводов:
+
+```json
+// en.json
+"my_task": {
+  "starting": "Running my task...",
+  "done": "Task complete"
+}
+
+// ru.json
+"my_task": {
+  "starting": "Выполнение задачи...",
+  "done": "Задача выполнена"
+}
+```
 
 ## Зависимости
 

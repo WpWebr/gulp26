@@ -6,8 +6,10 @@ dist/
 public/
 
 # Projects (each project manages its own build output)
-projects/*/dist/
-projects/*/public/
+# projects/*/dist/
+# projects/*/public/
+projects/
+projects.json
 
 # OS
 Thumbs.db
