@@ -110,7 +110,11 @@
     "usage_create": "Usage: npx gulp project:create <name> [--template <tpl>] [--path <path>]",
     "usage_use": "Usage: npx gulp project:use <name>",
     "usage_remove": "Usage: npx gulp project:remove <name> [--delete-files]",
-    "available_templates": "Available templates:"
+    "available_templates": "Available templates:",
+    "already_exists": "Project already exists at this path:",
+    "overwrite_confirm": "Overwrite existing project? (y/n)",
+    "overwrite_cancelled": "Project creation cancelled",
+    "overwrite_removing": "Removing old project..."
   },
 
   "language": {

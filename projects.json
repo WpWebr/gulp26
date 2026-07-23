@@ -2,13 +2,22 @@
   "activeProject": null,
   "projects": [
     {
-      "name": "my-site",
-      "root": "D:\\#_arbeit\\mu\\gulp26\\projects\\my-site",
+      "name": "ext-site",
+      "root": "D:\\#_arbeit\\mu\\gulp26\\projects\\test-site",
       "src": "src",
       "dest": "dist",
       "active": false,
       "template": null,
-      "created": "2026-07-23T17:42:55.665Z"
+      "created": "2026-07-23T18:41:49.960Z"
+    },
+    {
+      "name": "brand-new",
+      "root": "D:\\#_arbeit\\mu\\gulp26\\projects\\brand-new",
+      "src": "src",
+      "dest": "dist",
+      "active": false,
+      "template": null,
+      "created": "2026-07-23T18:42:03.457Z"
     },
     {
       "name": "my-site",
@@ -17,7 +26,7 @@
       "dest": "dist",
       "active": false,
       "template": "landing",
-      "created": "2026-07-23T17:48:39.830Z"
+      "created": "2026-07-23T18:51:27.765Z"
     }
   ]
 }

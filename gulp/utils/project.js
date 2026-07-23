@@ -90,6 +90,29 @@ export function projectExists(name) {
 // ─── Mutations ───────────────────────────────────────────────────────────────
 
 /**
+ * Find a project that already occupies a given root path.
+ * @param {string} root - Absolute path to check
+ * @returns {Project|null}
+ */
+export function findProjectByPath(root) {
+  const normalized = path.resolve(root);
+  return readStore().projects.find((p) => path.resolve(p.root) === normalized) || null;
+}
+
+/**
+ * Resolve the target project root before creation.
+ * @param {string} name
+ * @param {string} [customPath]
+ * @returns {string}
+ */
+export function resolveProjectRoot(name, customPath) {
+  const safeName = name.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+  return customPath
+    ? path.resolve(customPath)
+    : path.join(DEFAULT_PROJECTS_DIR, safeName);
+}
+
+/**
  * Create a new project.
  *
  * @param {object} opts
@@ -106,9 +129,7 @@ export function createProject({ name, path: customPath, src = 'src', dest = 'dis
   }
 
   const safeName = name.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '-');
-  const projectRoot = customPath
-    ? path.resolve(customPath)
-    : path.join(DEFAULT_PROJECTS_DIR, safeName);
+  const projectRoot = resolveProjectRoot(name, customPath);
 
   // Create directories
   if (!fs.existsSync(projectRoot)) {

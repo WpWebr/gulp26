@@ -3,6 +3,7 @@
  * @description Project management CLI tasks: list, use, create, remove, deactivate.
  */
 
+import readline from 'node:readline';
 import {
   listProjects,
   getActiveProject,
@@ -11,11 +12,28 @@ import {
   removeProject,
   deactivateAll,
   listTemplates,
+  findProjectByPath,
+  resolveProjectRoot,
 } from '../utils/project.js';
 import { info, success, warn, error } from '../utils/logger.js';
 import { t } from '../utils/i18n.js';
 
 const TASK = 'projects';
+
+/**
+ * Ask a y/n question via stdin.
+ * @param {string} question
+ * @returns {Promise<boolean>}
+ */
+function confirm(question) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(/^y(es)?$/i.test(answer.trim()));
+    });
+  });
+}
 
 export function projectList() {
   const projects = listProjects();
@@ -54,7 +72,7 @@ export function projectUse(name) {
   }
 }
 
-export function projectCreate(name, opts = {}) {
+export async function projectCreate(name, opts = {}) {
   if (!name) {
     warn(TASK, t('projects.usage_create'));
     const templates = listTemplates();
@@ -65,6 +83,22 @@ export function projectCreate(name, opts = {}) {
   }
 
   try {
+    const projectRoot = resolveProjectRoot(name, opts.path);
+    const existing = findProjectByPath(projectRoot);
+
+    if (existing) {
+      warn(TASK, `${t('projects.already_exists')} ${existing.root}`);
+
+      const confirmed = await confirm(`  ${t('projects.overwrite_confirm')} `);
+      if (!confirmed) {
+        info(TASK, t('projects.overwrite_cancelled'));
+        return;
+      }
+
+      info(TASK, t('projects.overwrite_removing'));
+      removeProject(existing.name, true);
+    }
+
     const project = createProject({
       name,
       template: opts.template,

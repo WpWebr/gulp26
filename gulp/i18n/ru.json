@@ -110,7 +110,11 @@
     "usage_create": "Использование: npx gulp project:create <имя> [--template <шаблон>] [--path <путь>]",
     "usage_use": "Использование: npx gulp project:use <имя>",
     "usage_remove": "Использование: npx gulp project:remove <имя> [--delete-files]",
-    "available_templates": "Доступные шаблоны:"
+    "available_templates": "Доступные шаблоны:",
+    "already_exists": "Проект уже существует по этому пути:",
+    "overwrite_confirm": "Перезаписать существующий проект? (y/n)",
+    "overwrite_cancelled": "Создание проекта отменено",
+    "overwrite_removing": "Удаление старого проекта..."
   },
 
   "language": {

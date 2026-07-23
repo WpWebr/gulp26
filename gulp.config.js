@@ -6,7 +6,7 @@
 
 export default {
   language: {
-    language: 'en',
+    language: 'ru',
   },
 
   modes: {

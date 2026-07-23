@@ -58,8 +58,8 @@ task('project:use', (done) => {
   done();
 });
 
-task('project:create', (done) => {
-  projectCreate(process.env.npm_config_name || process.env.PROJECT_NAME, {
+task('project:create', async (done) => {
+  await projectCreate(process.env.npm_config_name || process.env.PROJECT_NAME, {
     template: process.env.npm_config_template || process.env.PROJECT_TEMPLATE,
     path: process.env.npm_config_path || process.env.PROJECT_PATH,
   });
